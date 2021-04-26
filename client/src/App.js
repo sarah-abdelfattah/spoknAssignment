@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Styles/styles";
 
 //Import the pages/components
-
+import Homepage from "./Pages/Homepage";
 
 function App() {
   // eslint-disable-next-line
@@ -20,10 +20,11 @@ function App() {
       <div className='elements'>
         <Router>
           <Switch>
-            {/* <Route exact path='/home' render={(props) => <Homepage {...props} />} />
-            <Route exact path='/post:id' render={(props) => <Post {...props} />} />
+            <Route exact path='/home' render={(props) => <Homepage {...props} />} />
+            <Route exact path='/' render={(props) => <Homepage {...props} />} />
 
-            <Route exact path='/' render={(props) => <Homepage {...props} />} /> */}
+            {/* {/* <Route exact path='/post:id' render={(props) => <Post {...props} />} />/*} */}
+
           </Switch>
         </Router>
       </div>

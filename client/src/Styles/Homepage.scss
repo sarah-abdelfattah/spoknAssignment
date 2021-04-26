@@ -1,0 +1,51 @@
+@import './colorSchema';
+
+// Styles for the homepage, including styles for the posts
+.homepage-container {
+    background-color: $primary-gray;
+    padding: 20px;
+
+    h1 {
+        text-align: center;
+        font-family: $font1;
+        font-weight: bold;
+    }
+
+    .outer-container {
+        background-color: white;
+        width: 80%;
+        margin: 20px auto;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.363);
+        // height: 80vh;
+        // overflow: auto;
+        padding: 30px;
+
+        .post-container {
+            // border-radius: 15px;
+            padding: 20px 30px;
+            width: 80%;
+            margin: 40px auto;
+            box-shadow: 0px 0px 20px 4px rgba(0, 0, 0, 0.75);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            img {
+                height: 120px;
+                width: 100px;
+                margin-left: 0 30px;
+            }
+
+            .info {
+                width: 80%;
+                margin-left: 30px;
+
+                h4 {
+                    text-transform: capitalize;
+                }
+            }
+
+        }
+    }
+}
