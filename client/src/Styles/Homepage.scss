@@ -11,9 +11,74 @@
         font-weight: bold;
     }
 
-    .pagination {
-        width: fit-content;
+    h4 {
+        text-align: center;
+        text-decoration: underline;
+    }
+
+    .controls {
+        width: 80%;
+        margin: 20px auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .pagination {
+            padding: 0 15px;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .addBtn {
+            background-color: $secondary-gray;
+            outline: none;
+            border: none;
+            padding: 5px 10px;
+            margin-right: 20px;
+            border-radius: .25rem;
+            font-size: 16px;
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+    }
+
+    .newPost {
+        background-color: white;
+        width: 80%;
+        margin: 40px auto;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.363);
+        padding: 30px;
+    }
+
+    .MuiFormLabel-root {
+        font-size: 1.3rem;
+    }
+
+    .MuiInputBase-root {
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        display: block;
         margin: auto;
+        width: 200px;
+        background-color: $primary-purple;
+        outline: $primary-purple;
+        border: $primary-purple 1px solid;
+        font-weight: bold;
+        letter-spacing: 0.2rem;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background-color: $secondary-purple;
+            outline: $secondary-purple;
+            border: $secondary-purple 1px solid;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.363);
+        }
     }
 
     .outer-container {
@@ -22,8 +87,6 @@
         margin: 20px auto;
         border-radius: 15px;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.363);
-        // height: 80vh;
-        // overflow: auto;
         padding: 30px;
 
         .post-container {
@@ -52,10 +115,51 @@
                 width: 80%;
                 margin-left: 30px;
 
-                h4 {
+                h5 {
                     text-transform: capitalize;
                 }
+
+                .btn-area {
+                    width: fit-content;
+                    float: right;
+
+                    button {
+                        background-color: $secondary-gray;
+                        outline: none;
+                        border: none;
+                        padding: 5px 15px;
+                        margin-left: 20px;
+                        border-radius: .25rem;
+                        font-size: 16px;
+
+                        &:hover {
+                            transform: scale(1.1);
+                        }
+                    }
+                }
             }
+
+        }
+    }
+
+    .edit-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        background-color: rgba(0, 0, 0, 0.55);
+        width: 100%;
+        height: 100%;
+
+
+        .edit-modal-container {
+            background-color: white;
+            width: 70%;
+            margin: auto;
+            position: relative;
+            top: 25%;
+            padding: 40px;
+            border-radius: 15px;
 
         }
     }
