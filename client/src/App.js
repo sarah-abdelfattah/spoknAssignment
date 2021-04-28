@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 //Import the styles
+import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./Styles/styles";
 

@@ -2,8 +2,10 @@ import React from "react";
 import Post from "../Components/Post";
 import axios from "axios";
 import Pagination from "@material-ui/lab/Pagination";
-import { InputLabel, Input, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import { Button } from "react-bootstrap";
+import SearchField from "react-search-field";
+import { ToastContainer, toast } from "react-toastify";
 export class Homepage extends React.Component {
   constructor(props) {
     super(props);
@@ -15,6 +17,7 @@ export class Homepage extends React.Component {
     data: [],
     contentToDisplay: [],
     page: 1,
+    filteredData: [],
 
     newTitle: "",
     newBody: "",
@@ -28,18 +31,21 @@ export class Homepage extends React.Component {
     var removeIndex = this.state.data.map((item) => item.id).indexOf(id);
     ~removeIndex && this.state.data.splice(removeIndex, 1);
 
-    this.setState({ data: this.state.data });
+    this.setState({ data: this.state.data, filteredData: this.state.data });
+    toast.success("Post deleted successfully", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+
     this.handlePagination(this.state.page);
   };
 
   handleEdit = (id) => {
     this.setState({ viewModal: true, tempId: id });
-    const foundPost = this.state.data.find((post) => post.id === id);
-    this.setState({ newTitle: foundPost.title, newBody: foundPost.body });
-  };
-
-  handleEditBtn = (id) => {
-    this.setState({ viewModal: true });
     const foundPost = this.state.data.find((post) => post.id === id);
     this.setState({ newTitle: foundPost.title, newBody: foundPost.body });
   };
@@ -57,14 +63,24 @@ export class Homepage extends React.Component {
       title: this.state.newTitle,
       body: this.state.newBody,
     };
+
     let data = this.state.data;
     data.unshift(newPost);
 
     this.setState({ data: [] });
+    this.setState({ data: data, filteredData: data });
 
-    this.setState({ data });
+    toast.success("Post added successfully", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+
+    this.setState({ viewAdd: false, newTitle: "", newBody: "" });
     this.handlePagination(this.state.page);
-    this.setState({ viewAdd: false });
   };
 
   handleSubmitEdit = () => {
@@ -77,9 +93,33 @@ export class Homepage extends React.Component {
 
     this.setState({ data: [] });
 
-    this.setState({ data });
+    this.setState({ data: data, filteredData: data });
+    toast.success("Post updated successfully", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+
+    this.setState({ viewModal: false, newTitle: "", newBody: "" });
     this.handlePagination(this.state.page);
-    this.setState({ viewModal: false });
+  };
+
+  handleSearchOnChange = async (searchText) => {
+    let filteredData;
+    if (searchText === "") filteredData = this.state.data;
+    else {
+      filteredData = await this.state.data.filter(
+        (post) =>
+          post.title.includes(searchText) || post.body.includes(searchText)
+      );
+    }
+
+    this.setState({ filteredData: [] });
+    this.setState({ filteredData: filteredData });
+    this.handlePagination(this.state.page);
   };
 
   handlePagination = async (number) => {
@@ -88,10 +128,10 @@ export class Homepage extends React.Component {
     let contentToDisplay = [];
     for (
       let i = (page - 1) * 20;
-      i < page * 20 && i < this.state.data.length;
+      i < page * 20 && i < this.state.filteredData.length;
       i++
     ) {
-      await contentToDisplay.push(this.state.data[i]);
+      contentToDisplay.push(this.state.filteredData[i]);
     }
 
     this.setState({ contentToDisplay: [] });
@@ -109,7 +149,11 @@ export class Homepage extends React.Component {
       contentToDisplay.push(data[i]);
     }
 
-    this.setState({ data: data, contentToDisplay: contentToDisplay });
+    this.setState({
+      data: data,
+      filteredData: data,
+      contentToDisplay: contentToDisplay,
+    });
   }
 
   render() {
@@ -128,6 +172,13 @@ export class Homepage extends React.Component {
               this.handlePagination(event.target.textContent);
             }}
           />
+
+          <SearchField
+            placeholder="Search..."
+            onChange={(event) => this.handleSearchOnChange(event)}
+            classNames="test-class"
+          />
+
           <button
             className="addBtn"
             onClick={() => this.setState({ viewAdd: true })}
@@ -172,7 +223,7 @@ export class Homepage extends React.Component {
 
           {this.state.contentToDisplay.map((post) => (
             <Post
-              title={post.title}
+              title={post.id}
               body={post.body}
               key={post.id}
               handleDelete={() => this.handleDelete(post.id)}
@@ -213,6 +264,7 @@ export class Homepage extends React.Component {
             </div>
           </div>
         ) : null}
+        <ToastContainer />
       </div>
     );
   }
