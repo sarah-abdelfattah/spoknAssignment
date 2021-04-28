@@ -91,9 +91,10 @@ export class Homepage extends React.Component {
     data[index].title = this.state.newTitle;
     data[index].body = this.state.newBody;
 
-    this.setState({ data: [] });
+    this.setState({ data: [], filteredData: [] });
 
     this.setState({ data: data, filteredData: data });
+
     toast.success("Post updated successfully", {
       position: "top-right",
       autoClose: 5000,
@@ -103,8 +104,8 @@ export class Homepage extends React.Component {
       draggable: true,
     });
 
-    this.setState({ viewModal: false, newTitle: "", newBody: "" });
     this.handlePagination(this.state.page);
+    this.setState({ viewModal: false, newTitle: "", newBody: "" });
   };
 
   handleSearchOnChange = async (searchText) => {
@@ -223,9 +224,13 @@ export class Homepage extends React.Component {
 
           {this.state.contentToDisplay.map((post) => (
             <Post
-              title={post.id}
+              title={post.title}
               body={post.body}
               key={post.id}
+              // onClick={() =>
+              //   (document.location.href =
+              //     window.location.origin + `/${post.id}`)
+              // }
               handleDelete={() => this.handleDelete(post.id)}
               handleEdit={() => this.handleEdit(post.id)}
             ></Post>
@@ -264,6 +269,7 @@ export class Homepage extends React.Component {
             </div>
           </div>
         ) : null}
+
         <ToastContainer />
       </div>
     );

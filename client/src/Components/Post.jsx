@@ -14,7 +14,7 @@ export class Post extends React.Component {
     return (
       <div className="post-container">
         <img src={img} alt="stars"></img>
-        <div className="info">
+        <div className="info" onClick={this.props.onClick}>
           <h5>{this.state.title}</h5>
           {/* <h6>{this.state.user}</h6> */}
           <p>{this.state.body}</p>
