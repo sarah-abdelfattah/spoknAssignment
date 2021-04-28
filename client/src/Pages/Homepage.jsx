@@ -7,12 +7,6 @@ import { Button } from "react-bootstrap";
 import SearchField from "react-search-field";
 import { ToastContainer, toast } from "react-toastify";
 export class Homepage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmitAdd = this.handleSubmitAdd.bind(this);
-  }
-
   state = {
     data: [],
     contentToDisplay: [],
@@ -28,6 +22,10 @@ export class Homepage extends React.Component {
   };
 
   handleDelete = (id) => {
+    /* get index of item to be removed
+    then remove it from data array using splice
+    update corresponding states and pagination */
+
     var removeIndex = this.state.data.map((item) => item.id).indexOf(id);
     ~removeIndex && this.state.data.splice(removeIndex, 1);
 
@@ -45,6 +43,7 @@ export class Homepage extends React.Component {
   };
 
   handleEdit = (id) => {
+    // get post to be updated and show modal where new data to be updated
     this.setState({ viewModal: true, tempId: id });
     const foundPost = this.state.data.find((post) => post.id === id);
     this.setState({ newTitle: foundPost.title, newBody: foundPost.body });
@@ -57,6 +56,10 @@ export class Homepage extends React.Component {
   };
 
   handleSubmitAdd = (e) => {
+    /* create a new post object .. with random userId and id of length+1
+    add it to the front of the array using unshift
+    update corresponding states and pagination */
+
     let newPost = {
       userId: Math.floor(Math.random() * 10 + 1),
       id: parseInt(this.state.data.length) + 1,
@@ -83,17 +86,18 @@ export class Homepage extends React.Component {
     this.handlePagination(this.state.page);
   };
 
-  handleSubmitEdit = () => {
+  handleSubmitEdit = async () => {
+    /* get index of item to be updated
+    update that object with found index in the array
+    update corresponding states and pagination */
+
     let data = this.state.data;
 
     const index = data.findIndex((post) => post.id === this.state.tempId);
-
     data[index].title = this.state.newTitle;
     data[index].body = this.state.newBody;
 
-    this.setState({ data: [], filteredData: [] });
-
-    this.setState({ data: data, filteredData: data });
+    await this.setState({ data: data, filteredData: data });
 
     toast.success("Post updated successfully", {
       position: "top-right",
@@ -108,7 +112,19 @@ export class Homepage extends React.Component {
     this.setState({ viewModal: false, newTitle: "", newBody: "" });
   };
 
+  handleView = (event, id) => {
+    /* check if the click event was on a button (edit - delete), if not direct the page  */
+
+    console.log(event.target.nodeName);
+    if (event.target.nodeName !== "BUTTON")
+      document.location.href = window.location.origin + `/${id}`;
+  };
+
   handleSearchOnChange = async (searchText) => {
+    /* check if search text is empty, hence view all
+    else, filter the data array, where the body or title contains a substring of searchText
+    update corresponding states and pagination */
+
     let filteredData;
     if (searchText === "") filteredData = this.state.data;
     else {
@@ -140,6 +156,13 @@ export class Homepage extends React.Component {
   };
 
   async componentDidMount() {
+    /* get posts using API and axios
+    reverse data array, where the most recent post to be shown at the top
+    getting start index of item to be displayed 
+    content to display on each page is 20 items, depending on current page number
+        number of contents is either the last couple of items left (<20) or 20 items
+    update corresponding states and pagination */
+
     let data = (await axios.get("https://jsonplaceholder.typicode.com/posts"))
       .data;
     data = data.reverse();
@@ -157,6 +180,12 @@ export class Homepage extends React.Component {
     });
   }
 
+  // control div --> Pagination - search box - add button
+  // newPost div --> shown when add button is clicked and hence viewAdd state is changed to true
+  //             --> It shows the inputs for a new post
+  // outer-container div --> the post items --> the array of data items is mapped to Post items (Post is a separate component)
+  // editPost div --> shown when edit button is clicked and hence viewModal state is changed to true
+  //             --> It shows the inputs with post data and making it editable to update is
   render() {
     return (
       <div className="homepage-container">
@@ -165,7 +194,7 @@ export class Homepage extends React.Component {
         <div className="controls">
           <Pagination
             className="pagination"
-            count={Math.ceil(this.state.data.length / 20)}
+            count={Math.ceil(this.state.filteredData.length / 20)}
             shape="rounded"
             hideNextButton="true"
             hidePrevButton="true"
@@ -227,10 +256,7 @@ export class Homepage extends React.Component {
               title={post.title}
               body={post.body}
               key={post.id}
-              // onClick={() =>
-              //   (document.location.href =
-              //     window.location.origin + `/${post.id}`)
-              // }
+              onClick={(event) => this.handleView(event, post.id)}
               handleDelete={() => this.handleDelete(post.id)}
               handleEdit={() => this.handleEdit(post.id)}
             ></Post>
